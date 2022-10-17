@@ -82,29 +82,22 @@ public:
     };
     
 private:
-    using Filter = juce::dsp::IIR::Filter<float>;
-    using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
-    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
-    
-    MonoChain leftChain, rightChain;
-    
     enum ChainPositions
     {
         LowCut,
         Peak,
         HighCut
     };
-    
-    void updatePeakFilter(const ChainSettings& chainSettings);
+    using Filter = juce::dsp::IIR::Filter<float>;
     using Coefficients = Filter::CoefficientsPtr;
+    using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
+    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
+    MonoChain leftChain, rightChain;
+    void updatePeakFilter(const ChainSettings& chainSettings);
     static void updateCoefficients(Coefficients& old, const Coefficients& replacements);
-    
-    template<int Index, typename ChainType, typename CoefficientType>
-    void update(ChainType& chain, const CoefficientType& coefficients)
-    {
-        updateCoefficients(chain.template get<Index>().coefficients, coefficients[Index]);
-        chain.template setBypassed<Index>(false);
-    }
+    void updateLowCutFilters(const ChainSettings& chainSettings);
+    void updateHighCutFilters(const ChainSettings& chainSettings);
+    void updateFilters();
     
     template<typename ChainType, typename CoefficientType>
     void updateCutFilter(ChainType& chain,
@@ -119,19 +112,23 @@ private:
         switch (slope) {
             case Slope_48:
             {
-                update<3>(chain, coefficients);
+                updateCoefficients(chain.template get<3>().coefficients, coefficients[3]);
+                chain.template setBypassed<3>(false);
             }
             case Slope_36:
             {
-                update<2>(chain, coefficients);
+                updateCoefficients(chain.template get<2>().coefficients, coefficients[2]);
+                chain.template setBypassed<2>(false);
             }
             case Slope_24:
             {
-                update<1>(chain, coefficients);
+                updateCoefficients(chain.template get<1>().coefficients, coefficients[1]);
+                chain.template setBypassed<1>(false);
             }
             case Slope_12:
             {
-                update<0>(chain, coefficients);
+                updateCoefficients(chain.template get<0>().coefficients, coefficients[0]);
+                chain.template setBypassed<0>(false);
             }
         }
     }
