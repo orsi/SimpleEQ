@@ -82,6 +82,9 @@ public:
     };
     
 private:
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
+    
     enum ChainPositions
     {
         LowCut,
@@ -89,7 +92,7 @@ private:
         HighCut
     };
     using Filter = juce::dsp::IIR::Filter<float>;
-    using Coefficients = Filter::CoefficientsPtr;
+    using Coefficients = juce::dsp::IIR::Filter<float>::CoefficientsPtr;
     using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
     using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
     MonoChain leftChain, rightChain;
@@ -133,6 +136,4 @@ private:
         }
     }
     
-    //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
 };
