@@ -11,7 +11,15 @@
 
 //==============================================================================
 SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+: AudioProcessorEditor (&p),
+audioProcessor (p),
+peakFreqSliderAttachment(audioProcessor.apvts, "Peak Freq", peakFreqSlider),
+peakGainSliderAttachment(audioProcessor.apvts, "Peak Gain", peakGainSlider),
+peakQualitySliderAttachment(audioProcessor.apvts, "Peak Quality", peakQualitySlider),
+lowCutFreqSliderAttachment(audioProcessor.apvts, "LowCut Freq", lowCutFreqSlider),
+lowCutSlopeSliderAttachment(audioProcessor.apvts, "LowCut Slope", lowCutSlopeSlider),
+highCutFreqSliderAttachment(audioProcessor.apvts, "HighCut Freq", highCutFreqSlider),
+highCutSlopeSliderAttachment(audioProcessor.apvts, "HighCut Slope", highCutSlopeSlider)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -46,14 +54,14 @@ void SimpleEQAudioProcessorEditor::resized()
     auto bounds = getLocalBounds();
     auto responseArea = bounds.removeFromTop(bounds.getHeight() * 0.33);
     auto lowCutArea = bounds.removeFromLeft(bounds.getWidth() * 0.33);
-    auto highCutArea = bounds.removeFromRight(bounds.getWidth() * 0.33);
+    auto highCutArea = bounds.removeFromRight(bounds.getWidth() * 0.5);
     lowCutFreqSlider.setBounds(lowCutArea.removeFromTop(lowCutArea.getHeight() * 0.5));
     lowCutSlopeSlider.setBounds(lowCutArea);
     highCutFreqSlider.setBounds(highCutArea.removeFromTop(highCutArea.getHeight() * 0.5));
     highCutSlopeSlider.setBounds(highCutArea);
     peakFreqSlider.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.33));
     peakGainSlider.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.5));
-    peakQualitySlider.setBounds(lowCutArea);
+    peakQualitySlider.setBounds(bounds);
 }
 
 std::vector<juce::Component*> SimpleEQAudioProcessorEditor::getComponents()
@@ -64,8 +72,8 @@ std::vector<juce::Component*> SimpleEQAudioProcessorEditor::getComponents()
         &peakGainSlider,
         &peakQualitySlider,
         &lowCutFreqSlider,
-        &highCutFreqSlider,
         &lowCutSlopeSlider,
+        &highCutFreqSlider,
         &highCutSlopeSlider
     };
 }
