@@ -41,6 +41,49 @@ void updateCoefficients(Coefficients& old, const Coefficients& replacements);
 
 Coefficients makePeakFilter(const ChainSettings& chainSettings, double sampleRate);
 
+template<typename ChainType, typename CoefficientType>
+void updateCutFilter(ChainType& chain,
+                     CoefficientType& coefficients,
+                     const Slope& slope)
+{
+    chain.template setBypassed<0>(true);
+    chain.template setBypassed<1>(true);
+    chain.template setBypassed<2>(true);
+    chain.template setBypassed<3>(true);
+    
+    switch (slope) {
+        case Slope_48:
+        {
+            updateCoefficients(chain.template get<3>().coefficients, coefficients[3]);
+            chain.template setBypassed<3>(false);
+        }
+        case Slope_36:
+        {
+            updateCoefficients(chain.template get<2>().coefficients, coefficients[2]);
+            chain.template setBypassed<2>(false);
+        }
+        case Slope_24:
+        {
+            updateCoefficients(chain.template get<1>().coefficients, coefficients[1]);
+            chain.template setBypassed<1>(false);
+        }
+        case Slope_12:
+        {
+            updateCoefficients(chain.template get<0>().coefficients, coefficients[0]);
+            chain.template setBypassed<0>(false);
+        }
+    }
+}
+
+inline auto makeLowCutFilter(const ChainSettings& chainSettings, double sampleRate)
+{
+    return juce::dsp::FilterDesign<float>::designIIRHighpassHighOrderButterworthMethod(chainSettings.lowCutFreq, sampleRate, 2 * (chainSettings.lowCutSlope + 1));
+}
+
+inline auto makeHighCutFilter(const ChainSettings& chainSettings, double sampleRate)
+{
+    return juce::dsp::FilterDesign<float>::designIIRLowpassHighOrderButterworthMethod(chainSettings.highCutFreq, sampleRate, 2 * (chainSettings.highCutSlope + 1));
+}
 //==============================================================================
 /**
 */
@@ -97,47 +140,12 @@ public:
     };
     
 private:
-    //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
-    
     MonoChain leftChain, rightChain;
     void updatePeakFilter(const ChainSettings& chainSettings);
     void updateLowCutFilters(const ChainSettings& chainSettings);
     void updateHighCutFilters(const ChainSettings& chainSettings);
     void updateFilters();
     
-    template<typename ChainType, typename CoefficientType>
-    void updateCutFilter(ChainType& chain,
-                         CoefficientType& coefficients,
-                         const Slope& slope)
-    {
-        chain.template setBypassed<0>(true);
-        chain.template setBypassed<1>(true);
-        chain.template setBypassed<2>(true);
-        chain.template setBypassed<3>(true);
-        
-        switch (slope) {
-            case Slope_48:
-            {
-                updateCoefficients(chain.template get<3>().coefficients, coefficients[3]);
-                chain.template setBypassed<3>(false);
-            }
-            case Slope_36:
-            {
-                updateCoefficients(chain.template get<2>().coefficients, coefficients[2]);
-                chain.template setBypassed<2>(false);
-            }
-            case Slope_24:
-            {
-                updateCoefficients(chain.template get<1>().coefficients, coefficients[1]);
-                chain.template setBypassed<1>(false);
-            }
-            case Slope_12:
-            {
-                updateCoefficients(chain.template get<0>().coefficients, coefficients[0]);
-                chain.template setBypassed<0>(false);
-            }
-        }
-    }
-    
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
 };
