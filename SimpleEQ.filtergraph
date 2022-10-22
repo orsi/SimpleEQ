@@ -61,11 +61,11 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="5" x="0.5225" y="0.5057692307692307" useARA="0" uiLastX_Normal="919"
-          uiLastY_Normal="250" uiopen_Normal="1">
+  <FILTER uid="5" x="0.5225" y="0.5057692307692307" useARA="0" uiLastX_Normal="613"
+          uiLastY_Normal="233" uiopen_Normal="1">
     <PLUGIN name="SimpleEQ" format="AudioUnit" category="Effect" manufacturer="yourcompany"
             version="1.0.0" file="AudioUnit:Effects/aufx,G7cf,Manu" uniqueId="6b236b6b"
-            isInstrument="0" fileTime="0" infoUpdateTime="183e3dc70ca" numInputs="2"
+            isInstrument="0" fileTime="0" infoUpdateTime="1840108d0f2" numInputs="2"
             numOutputs="2" isShell="0" hasARAExtension="0" uid="6b236b6b"/>
     <STATE>634.hAGaoMGcv.C1AHv.DTfAGfPBJrvDTTgEWvUag4VclE1XzUmbkIGUjEFcgwUYrUVak4Fcs3VXsU1UyUmXzkGbkckckI2bo8laTQWdvU1WP7fZ0MVYPwVcmklaSQWXzUFUtEVakIQSg4VcOAAQ..............vAT.e2Y3y2XeNEwKAH+.....yhsn......zrkZ91ittvnWUn1h.....D1iQjE.....lsQ4X9Cf..fzLzfCQDULQISzO.QTvTURtAWczE8CRX0S0QGb0QmDGcyXlAA.RDVclg2SQDvPPElbg0VYzUlbyA..Ab.TAIUPMAP.BjFY.DfCEfTZmg1P0QGHFIWYwAfcgwVckAP.IP.......f3z.A.TAIUPMAP.BjFY.DvCEfTZmg1P0QGHSw1avUF.1EFa0UF.Aj.A............PEjTA0D.AHPZjAP.MT.Suc2P0QGHFIWYwAfcgwVckAP.IP.........M.A.TAIUPMAP.BjFY.DfCEvza2MTczAxTr8FbkAfcgwVckAP.IP.............TAIUPMAP.BjFY.DvBE.UYgsFHFIWYwAfcgwVckAP.IP........2g.A.TAIUPMAP.BjFY.DvBE.UYgsFHGEVZtAfcgwVckAP.IP.............TAIUPMAP.BjFY.DfCE.UYgsFHQUWXrkFc4AfcgwVckAP.IP.........7+..VU4FcoQGakQF.H.PF.XB.q..N..D.HAPS.7E.jAPZ..K.0Bvs.jK.7Bfu.PL.GCfy.LM.UCf1BDB.......f.A..........F..................f.p.</STATE>
     <LAYOUT>
@@ -81,7 +81,7 @@
           uiLastY_Normal="193" uiopen_Normal="1">
     <PLUGIN name="AUAudioFilePlayer" format="AudioUnit" category="Generator"
             manufacturer="Apple" version="1.6.0" file="AudioUnit:Generators/augn,afpl,appl"
-            uniqueId="6163676e" isInstrument="0" fileTime="0" infoUpdateTime="183e3dc70ca"
+            uniqueId="6163676e" isInstrument="0" fileTime="0" infoUpdateTime="1840108d0f2"
             numInputs="0" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="6163676e"/>
     <STATE>540.hAGaoMGcv.C1AHv.DTfAGfPBJr.Gc3wGgvUag4VclE1XzUmbkIGUjEFcg8EDarVPUAkbkMWYzAUYxMWZyQWYtQ2TzEFcksTY4c0b0IFc4AWYWYWYxMWZu4FUzkGbk8EDOXVZrUVKxUlYkIWYtMVYyQkag0VYRDFbvwFPgxvzM3vCPDQFXYTZrUlSg0VYWIUYmk1atMmWIM2TkwVYiQWYjYTZrU1WP3xKUMWYxM2KuI2bo8BQucmar8VXjM2KTgVctQVYxARKfPUYrU1XgMGckQlKsA2LgJA0SPQEVbAFYngWRU1Yo8laD8VYywzauAmVRU1Yo8laDEFcg8EDPjzbSUFakMFckQlTkcVZu4lVRU1Yo8laNEVakgvSP.G..........PRze+V.....XD82uE.....3UGg.......B.........vD82uE.....NR+8aA....D................................................................3IpA......InkSkcGHRU1Yo8laIHQXlAGaP.fDgU2YtEMHPXkQowVYfDCVU4FcoQGakQF.H.PF.XB.q.PR.DE.YAfW..G.0Afd.rG.8A.g.zH.UB.o.TM.WC.3.7N.5GPCAfQ.YD.iAzX.XFPlA3Y.fFPoAfZ.uB.......HP..........HB..................D.t</STATE>
