@@ -26,6 +26,21 @@ struct ChainSettings {
 
 ChainSettings getChainSettings(juce::AudioProcessorValueTreeState& apvts);
 
+using Filter = juce::dsp::IIR::Filter<float>;
+using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
+using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
+enum ChainPositions
+{
+    LowCut,
+    Peak,
+    HighCut
+};
+
+using Coefficients = Filter::CoefficientsPtr;
+void updateCoefficients(Coefficients& old, const Coefficients& replacements);
+
+Coefficients makePeakFilter(const ChainSettings& chainSettings, double sampleRate);
+
 //==============================================================================
 /**
 */
@@ -85,19 +100,8 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
     
-    enum ChainPositions
-    {
-        LowCut,
-        Peak,
-        HighCut
-    };
-    using Filter = juce::dsp::IIR::Filter<float>;
-    using Coefficients = juce::dsp::IIR::Filter<float>::CoefficientsPtr;
-    using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
-    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
     MonoChain leftChain, rightChain;
     void updatePeakFilter(const ChainSettings& chainSettings);
-    static void updateCoefficients(Coefficients& old, const Coefficients& replacements);
     void updateLowCutFilters(const ChainSettings& chainSettings);
     void updateHighCutFilters(const ChainSettings& chainSettings);
     void updateFilters();

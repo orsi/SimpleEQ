@@ -23,7 +23,9 @@ struct CustomRotarySlider : juce::Slider
 //==============================================================================
 /**
 */
-class SimpleEQAudioProcessorEditor  : public juce::AudioProcessorEditor
+class SimpleEQAudioProcessorEditor  : public juce::AudioProcessorEditor,
+    juce::AudioProcessorParameter::Listener,
+    juce::Timer
 {
 public:
     SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor&);
@@ -32,30 +34,35 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-
+    void parameterValueChanged (int parameterIndex, float newValue) override;
+    void parameterGestureChanged (int parameterIndex, bool gestureIsStarting) override {}
+    void timerCallback() override;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SimpleEQAudioProcessor& audioProcessor;
     
+    juce::Atomic<bool> parametersChanged { false };
     CustomRotarySlider peakFreqSlider,
-    peakGainSlider,
-    peakQualitySlider,
-    lowCutFreqSlider,
-    lowCutSlopeSlider,
-    highCutFreqSlider,
-    highCutSlopeSlider;
+        peakGainSlider,
+        peakQualitySlider,
+        lowCutFreqSlider,
+        lowCutSlopeSlider,
+        highCutFreqSlider,
+        highCutSlopeSlider;
     
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
     
     Attachment peakFreqSliderAttachment,
-    peakGainSliderAttachment,
-    peakQualitySliderAttachment,
-    lowCutFreqSliderAttachment,
-    lowCutSlopeSliderAttachment,
-    highCutFreqSliderAttachment,
-    highCutSlopeSliderAttachment;
+        peakGainSliderAttachment,
+        peakQualitySliderAttachment,
+        lowCutFreqSliderAttachment,
+        lowCutSlopeSliderAttachment,
+        highCutFreqSliderAttachment,
+        highCutSlopeSliderAttachment;
+    
+    MonoChain monoChain;
     
     std::vector<juce::Component*> getComponents();
 
