@@ -62,16 +62,16 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
             magnitude *= lowCut.get<3>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
         }
         if (!highCut.isBypassed<0>()) {
-            magnitude *= lowCut.get<0>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
+            magnitude *= highCut.get<0>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
         }
         if (!highCut.isBypassed<1>()) {
-            magnitude *= lowCut.get<1>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
+            magnitude *= highCut.get<1>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
         }
         if (!highCut.isBypassed<2>()) {
-            magnitude *= lowCut.get<2>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
+            magnitude *= highCut.get<2>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
         }
         if (!highCut.isBypassed<3>()) {
-            magnitude *= lowCut.get<3>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
+            magnitude *= highCut.get<3>().coefficients->getMagnitudeForFrequency(frequency, sampleRate);
         }
         
         magnitudes[i] = juce::Decibels::gainToDecibels(magnitude);
