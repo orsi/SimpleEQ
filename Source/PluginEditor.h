@@ -51,7 +51,10 @@ private:
     juce::String suffix;
 };
 
-struct ResponseCurveComponent : juce::Component, juce::AudioProcessorParameter::Listener, juce::Timer
+struct ResponseCurveComponent :
+juce::Component,
+juce::AudioProcessorParameter::Listener,
+juce::Timer
 {
     ResponseCurveComponent(SimpleEQAudioProcessor&);
     ~ResponseCurveComponent();
@@ -63,6 +66,7 @@ private:
     SimpleEQAudioProcessor& audioProcessor;
     juce::Atomic<bool> parametersChanged { false };
     MonoChain monoChain;
+    void updateChain();
 };
 
 //==============================================================================
