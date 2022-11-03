@@ -159,7 +159,9 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (juce::Colours::black);
     
-    auto responseArea = getLocalBounds();
+    g.drawImage(background, getLocalBounds().toFloat());
+    
+    auto responseArea = getAnalysisArea();
     auto width = responseArea.getWidth();
     auto& lowCut = monoChain.get<ChainPositions::LowCut>();
     auto& peak = monoChain.get<ChainPositions::Peak>();
@@ -217,9 +219,121 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
         responseCurve.lineTo(responseArea.getX() + i, map(magnitudes[i]));
     }
     g.setColour(juce::Colours::orange);
-    g.drawRoundedRectangle(responseArea.toFloat(), 4.f, 1.f);
+    g.drawRoundedRectangle(getRenderArea().toFloat(), 4.f, 1.f);
     g.setColour(juce::Colours::white);
     g.strokePath(responseCurve, juce::PathStrokeType(2.f));
+}
+
+void ResponseCurveComponent::resized()
+{
+    background = juce::Image(juce::Image::PixelFormat::RGB, getWidth(), getHeight(), true);
+    juce::Graphics g(background);
+    
+    juce::Array<float> frequencies
+    {
+        20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000
+    };
+    auto renderArea = getAnalysisArea();
+    auto top = renderArea.getY();
+    auto right = renderArea.getRight();
+    auto bottom = renderArea.getBottom();
+    auto left = renderArea.getX();
+    auto width = renderArea.getWidth();
+    
+    
+    const int fontHeight = 10;
+    g.setFont(fontHeight);
+    for (auto frequency : frequencies)
+    {
+        auto normX = juce::mapFromLog10(frequency, 20.f, 20000.f);
+        auto x = left + width * normX;
+        
+        // frequency vertical grid line
+        g.setColour(juce::Colours::dimgrey);
+        g.drawVerticalLine(x, top, bottom);
+        
+        
+        // frequency text label
+        bool addK = false;
+        juce::String str;
+        if (frequency > 999.f)
+        {
+            addK = true;
+            frequency /= 1000.f;
+        }
+        str << frequency;
+        if (addK)
+        {
+            str << "k";
+        }
+        str << "Hz";
+        
+        auto textWidth = g.getCurrentFont().getStringWidth(str);
+        juce::Rectangle<int> r;
+        r.setSize(textWidth, fontHeight);
+        r.setCentre(x, 0);
+        r.setY(4);
+        
+        g.setColour(juce::Colours::lightgrey);
+        g.drawFittedText(str, r, juce::Justification::centred, 1);
+    }
+    
+    juce::Array<float> gains
+    {
+        -24, -12, 0, 12, 24
+    };
+    for (auto gain : gains)
+    {
+        auto normY = juce::jmap(gain, -24.f, 24.f, float(bottom), float(top));
+        
+        // draw horizontal gain grid line
+        g.setColour(gain == 0.f ? juce::Colour(0u, 172u, 1u) : juce::Colours::darkgrey);
+        g.drawHorizontalLine(normY, left, right);
+        
+        // gain right text label
+        juce::String str;
+        if (gain > 0)
+        {
+            str << "+";
+        }
+        str << gain;
+        
+        auto textWidth = g.getCurrentFont().getStringWidth(str);
+        juce::Rectangle<int> r;
+        r.setSize(textWidth, fontHeight);
+        r.setX(getWidth() - textWidth - 4);
+        r.setCentre(r.getCentreX(), normY);
+        
+        g.setColour(gain == 0.f ? juce::Colour(0u, 172u, 1u) : juce::Colours::lightgrey);
+        g.drawFittedText(str, r, juce::Justification::centred, 1);
+        
+        // gain left text label
+        str.clear();
+        str << (gain - 24.f);
+        
+        textWidth = g.getCurrentFont().getStringWidth(str);
+        r.setSize(textWidth, fontHeight);
+        r.setX(4);
+        g.setColour(juce::Colours::lightgrey);
+        g.drawFittedText(str, r, juce::Justification::centred, 1);
+    }
+}
+
+juce::Rectangle<int> ResponseCurveComponent::getRenderArea()
+{
+    auto bounds = getLocalBounds();
+    bounds.removeFromTop(20);
+    bounds.removeFromRight(24);
+    bounds.removeFromLeft(24);
+    return bounds;
+}
+
+juce::Rectangle<int> ResponseCurveComponent::getAnalysisArea()
+{
+    auto bounds = getRenderArea();
+    bounds.removeFromTop(4);
+    bounds.removeFromBottom(4);
+    return bounds;
 }
 
 void ResponseCurveComponent::parameterValueChanged(int parameterIndex, float newValue)
