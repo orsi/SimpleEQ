@@ -225,7 +225,8 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
     }
     
     // fft analyser
-    g.setColour(juce::Colours::blue);
+    leftChannelFFTPath.applyTransform(juce::AffineTransform().translation(responseArea.getX(), responseArea.getY()));
+    g.setColour(juce::Colours::skyblue);
     g.strokePath(leftChannelFFTPath, juce::PathStrokeType(1.f));
     
     g.setColour(juce::Colours::orange);
